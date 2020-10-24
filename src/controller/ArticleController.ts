@@ -12,8 +12,10 @@ export class ArticleController {
         this.articleService = articleService;
     }
 
-    public async getAll(req: Request, res: Response, next: NextFunction) {
-        return await this.articleService.getAll();
+    public async getPage(req: Request, res: Response, next: NextFunction) {
+        const pageSize = parseInt((req.query as any).pageSize);
+        const page = parseInt((req.query as any).page);
+        return await this.articleService.getPageOfArticles(pageSize, page);
     }
 
     public async create(req: Request, res: Response, next: NextFunction): Promise<Article> {

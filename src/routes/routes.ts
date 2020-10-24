@@ -10,7 +10,7 @@ const Routes = [
         method: "get",
         route: "/articles",
         controller: ArticleController,
-        action: "getAll"
+        action: "getPage"
     },
     {
         method: "post",
