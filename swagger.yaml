@@ -1,0 +1,42 @@
+openapi: 3.0.0
+info:
+  title: Article API in Node.js + TypeORM
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /:
+    get:
+      summary: Lists the links of articles
+      description: Restricted to admin users.
+      operationId: getAllArticleLinks
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: An array of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: "5eb12e197e06a76ccdefc121"
+                    firstName:
+                      type: string
+                      example: "Jason"
+                    lastName:
+                      type: string
+                      example: "Watmore"
+                    username:
+                      type: string
+                      example: "jason"
+                    role:
+                      type: string
+                      example: "Admin"
