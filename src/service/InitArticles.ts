@@ -1,6 +1,6 @@
 import { Article } from "../entity/Article";
 import ArticleService from "./ArticleService";
-import fetch = require("node-fetch");
+import fetch from "node-fetch";
 
 export async function initArticles(articleService: ArticleService): Promise<void> {
     if (await articleService.getCount() === 0) {

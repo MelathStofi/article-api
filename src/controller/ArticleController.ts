@@ -1,7 +1,5 @@
-import {getRepository, Repository} from "typeorm";
 import {NextFunction, Request, Response} from "express";
 import { Article } from "../entity/Article";
-import fetch from "node-fetch";
 import ArticleService from "../service/ArticleService";
 
 export class ArticleController {
@@ -13,18 +11,30 @@ export class ArticleController {
     }
 
     public async getPage(req: Request, res: Response, next: NextFunction) {
-        const pageSize = parseInt((req.query as any).pageSize);
-        const page = parseInt((req.query as any).page);
-        return await this.articleService.getPageOfArticles(pageSize, page);
+        try {
+            const pageSize = parseInt((req.query as any).pageSize);
+            const page = parseInt((req.query as any).page);
+            return await this.articleService.getPageOfArticles(pageSize, page);
+        } catch (err) {
+            next(err);
+        }
     }
 
     public async create(req: Request, res: Response, next: NextFunction): Promise<Article> {
-        const articleEntity = await this.articleService.create(req.body);
-        return articleEntity;
+        try {
+            const articleEntity = await this.articleService.create(req.body);
+            return articleEntity;
+        } catch (err) {
+            next(err);
+        }
     }
 
     async getById(req: Request, res: Response, next: NextFunction): Promise<Article> {
-        return await this.articleService.getById(parseInt(req.params.id));
+        try {
+            return await this.articleService.getById(parseInt(req.params.id));
+        } catch (err) {
+            next(err);
+        }
     }
 
 }
