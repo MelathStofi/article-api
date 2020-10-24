@@ -11,8 +11,11 @@ export default class ArticleService {
     }
 
     public async getPageOfArticles(pageSize: number, page: number): Promise<Page> {
-        if (isNaN(pageSize) || isNaN(page) || page < 1)
-            throw Error("ValidationError");
+        if (isNaN(pageSize) || isNaN(page) || page < 1) {
+            const err = new Error("Query parameters must be positive natural numbers!");
+            err.name = "ValidationError";
+            throw err;
+        }
         const skip = pageSize * (page -1);
         const articlesAndCount = await this.repository.findAndCount({skip: skip, take: pageSize});
         const respBody = {

@@ -8,7 +8,9 @@ export default function validateRequest(req: Request, next: NextFunction, schema
     };
     const { error, value } = schema.validate(req.body, options);
     if (error) {
-        next(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
+        const err = new Error(`Validation error: ${error.details.map(x => x.message).join(', ')}`);
+        err.name = "ValidationError";
+        next(err);
     } else {
         req.body = value;
         next();

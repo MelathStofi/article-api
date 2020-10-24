@@ -21,6 +21,6 @@ createConnection(getORMConfig()).then(async connection => {
     const port = getServerDetails().PORT;
     app.listen(port);
 
-    console.log(`Express server has started on port ${port}. Open http://localhost:${port}/articles to see results`);
+    console.log(`Express server has started on port ${port}.`);
 
 }).catch(error => console.log(error));
