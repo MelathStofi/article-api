@@ -1,5 +1,6 @@
 import { Repository } from "typeorm";
 import { Article } from "../entity/Article";
+import Page from "../model/Page";
 
 export default class ArticleService {
 
@@ -9,8 +10,21 @@ export default class ArticleService {
         this.repository = repository;
     }
 
-    public async getAll(): Promise<Array<Article>> {
-        return await this.repository.find();
+    public async getPageOfArticles(pageSize: number, page: number): Promise<Page> {
+        if (isNaN(pageSize) || isNaN(page) || page < 1)
+            throw Error("ValidationError");
+        const skip = pageSize * (page -1);
+        const articlesAndCount = await this.repository.findAndCount({skip: skip, take: pageSize});
+        const respBody = {
+            meta: {
+                pageSize: pageSize,
+                pageCount: Math.ceil(articlesAndCount[1] / pageSize),
+                page: page,
+                count: articlesAndCount[1]
+            },
+            articles: articlesAndCount[0]
+        }
+        return respBody;
     }
 
     public async create(article: Article): Promise<Article> {
