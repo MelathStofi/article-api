@@ -6,6 +6,7 @@ import swaggerRouter from "../helper/swagger";
 import ArticleService from "../service/ArticleService";
 import Joi = require("joi");
 import validateRequest from "../middleware/validateRequest";
+import authorize from "../middleware/authorize";
 
 const Routes = [
     {
@@ -25,7 +26,7 @@ const Routes = [
     {
         method: "get",
         route: "/articles/:id",
-        middleware: nextFunction,
+        middleware: authorize,
         controller: ArticleController,
         action: "getById"
     },
@@ -34,14 +35,14 @@ const Routes = [
         route: "/auth/create-token",
         middleware: nextFunction,
         controller: TokenController,
-        action: "create"
+        action: "createToken"
     },
     {
         method: "put",
         route: "/auth/renew-token",
         middleware: nextFunction,
         controller: TokenController,
-        action: "renew"
+        action: "renewToken"
     }
 ];
 

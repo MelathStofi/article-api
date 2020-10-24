@@ -11,6 +11,7 @@ export class ArticleController {
     }
 
     public async getPage(req: Request, res: Response, next: NextFunction) {
+        console.log(req.headers["user-agent"]);
         try {
             const pageSize = parseInt((req.query as any).pageSize);
             const page = parseInt((req.query as any).page);
