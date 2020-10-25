@@ -4,10 +4,11 @@ import {config} from "dotenv";
 config();
 
 export const getServerDetails = () => {
-    const port = parseInt(process.env.PORT);
+    let port = parseInt(process.env.PORT);
+    if (isNaN(port)) port = 8080;
     return {
-        BASE_URL: process.env.BASE_URL,
-        PORT: port != null ? port : 8080
+        BASE_URL: process.env.BASE_URL ? process.env.BASE_URL : `http://localhost:${port}`,
+        PORT: port
     };
 };
 

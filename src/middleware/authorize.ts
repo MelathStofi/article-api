@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { Token } from "../entity/Token";
+import Err from "../error/Err";
 const uuidAPIKey = require("uuid-apikey");
 
 export default async function authorize(req: Request, res: Response, next: NextFunction) {
@@ -13,8 +14,6 @@ export default async function authorize(req: Request, res: Response, next: NextF
         await repository.save(tokenEntity);
         next();
     } catch (error) {
-        const err = new Error("Invalid token")
-        err.name = "ValidationError";
-        next(err);
+        next(new Err("ValidationError", "Invalid token"));
     }
   }

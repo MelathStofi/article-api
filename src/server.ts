@@ -12,11 +12,13 @@ createConnection(getORMConfig()).then(async connection => {
     const app = express();
     app.use(bodyParser.json());
 
+    app.use("/static", express.static(process.cwd() + "/static"));
+
     connection.synchronize();
     const articleRepository = connection.getRepository(Article);
     const articleService = new ArticleService(articleRepository);
     initArticles(articleService);
-    registerRoutes(app, articleService);
+    registerRoutes(app);
 
     const port = getServerDetails().PORT;
     app.listen(port);
