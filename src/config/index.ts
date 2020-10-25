@@ -38,3 +38,8 @@ export const getORMConfig = () => {
         }
     } as ConnectionOptions;
 }
+
+export function getRequestCount() {
+    const count = parseInt(process.env.REQUEST_COUNT);
+    return !isNaN(count) ? count : 5;
+}
