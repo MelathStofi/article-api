@@ -37,7 +37,3 @@ export const getORMConfig = () => {
         }
     } as ConnectionOptions;
 }
-
-export const getSecretKey = () => {
-    return process.env.SECRET_KEY;
-}
