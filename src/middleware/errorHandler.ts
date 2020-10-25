@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 export default function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
     switch (true) {
-        case err.message.toLowerCase().endsWith('not found'):
+        case err.name === "NotFound":
             return res.status(404).json({ message: err.message });
         case err.name === 'ValidationError':
             return res.status(400).json({ message: err.message });

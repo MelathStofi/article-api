@@ -54,13 +54,6 @@ const Routes = [
         middleware: nextFunction,
         controller: ImageController,
         action: "uploadImage"
-    },
-    {
-        method: "get",
-        route: "/image/:id",
-        middleware: nextFunction,
-        controller: ImageController,
-        action: "getImage"
     }
 ];
 
@@ -76,8 +69,9 @@ export function registerRoutes(app: Application): void {
             }
         });
     });
-    app.use('/docs', swaggerRouter);
+    app.use("/docs", swaggerRouter);
     app.use(errorHandler);
+    app.use("*", (req, res) => res.status(404).send("ლ(ಠ_ಠლ)"));
 }
 
 function authenticateArticleSchema(req: Request, res: Response, next: NextFunction) {

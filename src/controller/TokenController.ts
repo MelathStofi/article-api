@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 const uuidAPIKey = require("uuid-apikey");
 import { getRepository } from "typeorm";
+import { getRequestCount } from "../config";
 import { Token } from "../entity/Token";
 
 export default class TokenController {
@@ -9,7 +10,7 @@ export default class TokenController {
 
     async createToken(req: Request, res: Response, next: NextFunction) {
         const platform = req.body.platform ? req.body.platform : this.getPlatform(req.headers["user-agent"]);
-        const tokenEntity = await this.repository.save({platform: platform});
+        const tokenEntity = await this.repository.save({platform: platform, remaining: getRequestCount()});
         const token = uuidAPIKey.toAPIKey(tokenEntity.id, {"noDashes": true});
         return {token: token, remaining: tokenEntity.remaining };
     }
@@ -18,7 +19,7 @@ export default class TokenController {
         try {
             let token = req.headers.authorization;
             const tokenEntity = await this.repository.findOne(uuidAPIKey.toUUID(token, {"noDashes": true}));
-            tokenEntity.remaining = 5;
+            tokenEntity.remaining = getRequestCount();
             await this.repository.save(tokenEntity);
             return {remaining: tokenEntity.remaining};
         } catch (error) {
@@ -28,7 +29,7 @@ export default class TokenController {
         }
     }
 
-    getPlatform(userAgent: string) {
+    private getPlatform(userAgent: string) {
         if (userAgent.includes("Android ")) return "Android";
         if (userAgent.includes("Linux ")) return "Linux";
         if (userAgent.includes("iPhone OS")) return "iPhone OS";

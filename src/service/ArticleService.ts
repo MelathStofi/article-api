@@ -12,19 +12,21 @@ export default class ArticleService {
     }
 
     public async getPageOfArticles(pageSize: number, page: number): Promise<Page> {
-        if (isNaN(pageSize) || isNaN(page) || page < 1) {
+        if (isNaN(pageSize) || isNaN(page) || page < 1 || pageSize < 1) {
             throw new Err("ValidationError", "Query parameters must be positive natural numbers!");
         }
         const skip = pageSize * (page -1);
-        const articlesAndCount = await this.repository.findAndCount({skip: skip, take: pageSize});
+        const [articles, count] = await this.repository.findAndCount({skip: skip, take: pageSize});
+        const pageCount = Math.ceil(count / pageSize);
+        if (page > pageCount) throw new Err("NotFound", "No such page");
         return {
             meta: {
                 pageSize: pageSize,
-                pageCount: Math.ceil(articlesAndCount[1] / pageSize),
+                pageCount: pageCount,
                 page: page,
-                count: articlesAndCount[1]
+                count: count
             },
-            articles: articlesAndCount[0]
+            articles: articles
         }
     }
 
