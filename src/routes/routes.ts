@@ -76,7 +76,7 @@ export function registerRoutes(app: Application): void {
             }
         });
     });
-    app.use('/api/docs', swaggerRouter);
+    app.use('/docs', swaggerRouter);
     app.use(errorHandler);
 }
 
