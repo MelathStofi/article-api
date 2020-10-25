@@ -4,4 +4,6 @@ node_modules/
 build/
 tmp/
 temp/
-static/uploads/
+
+static/uploads/*
+#!static/uploads/.gitkeep
