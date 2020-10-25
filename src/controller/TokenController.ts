@@ -23,7 +23,7 @@ export default class TokenController {
             return {remaining: tokenEntity.remaining};
         } catch (error) {
             error.name = "ValidationError";
-            error.message = "Invalid token"
+            error.message = "Invalid token";
             next(error);
         }
     }

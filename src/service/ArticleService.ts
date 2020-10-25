@@ -1,5 +1,6 @@
 import { Repository } from "typeorm";
 import { Article } from "../entity/Article";
+import Err from "../error/Err";
 import Page from "../model/Page";
 
 export default class ArticleService {
@@ -12,9 +13,7 @@ export default class ArticleService {
 
     public async getPageOfArticles(pageSize: number, page: number): Promise<Page> {
         if (isNaN(pageSize) || isNaN(page) || page < 1) {
-            const err = new Error("Query parameters must be positive natural numbers!");
-            err.name = "ValidationError";
-            throw err;
+            throw new Err("ValidationError", "Query parameters must be positive natural numbers!");
         }
         const skip = pageSize * (page -1);
         const articlesAndCount = await this.repository.findAndCount({skip: skip, take: pageSize});
@@ -36,7 +35,7 @@ export default class ArticleService {
 
     public async getById(id: number): Promise<Article> {
         if (isNaN(id) || id < 1 || id > await this.repository.count())
-            throw Error("Article not found");
+            throw new Err("NotFound", "Article not found");
         return await this.repository.findOne(id);
     }
 
