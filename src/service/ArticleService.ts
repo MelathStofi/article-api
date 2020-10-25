@@ -18,7 +18,7 @@ export default class ArticleService {
         }
         const skip = pageSize * (page -1);
         const articlesAndCount = await this.repository.findAndCount({skip: skip, take: pageSize});
-        const respBody = {
+        return {
             meta: {
                 pageSize: pageSize,
                 pageCount: Math.ceil(articlesAndCount[1] / pageSize),
@@ -27,7 +27,6 @@ export default class ArticleService {
             },
             articles: articlesAndCount[0]
         }
-        return respBody;
     }
 
     public async create(article: Article): Promise<Article> {
@@ -36,6 +35,8 @@ export default class ArticleService {
     }
 
     public async getById(id: number): Promise<Article> {
+        if (isNaN(id) || id < 1 || id > await this.repository.count())
+            throw Error("Article not found");
         return await this.repository.findOne(id);
     }
 
