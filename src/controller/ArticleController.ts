@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import { Article } from "../entity/Article";
 import ArticleService from "../service/ArticleService";
 
-export class ArticleController {
+export default class ArticleController {
 
     private articleService: ArticleService;
 
