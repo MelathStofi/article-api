@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import { Article } from "../entity/Article";
+import Err from "../error/Err";
 import Page from "../model/Page";
 import ArticleService from "../service/ArticleService";
 
@@ -34,7 +35,7 @@ export default class ArticleController {
         try {
             return await this.articleService.getById(parseInt(req.params.id));
         } catch (err) {
-            next(err);
+            next(new Err("NotFound", "Article not found"));
         }
     }
 

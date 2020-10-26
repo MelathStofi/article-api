@@ -21,7 +21,7 @@ export default class ArticleService {
         if (page > pageCount) throw new Err("NotFound", "No such page");
         return {
             meta: {
-                pageSize: pageSize,
+                pageSize: articles.length,
                 pageCount: pageCount,
                 page: page,
                 count: count
@@ -36,9 +36,7 @@ export default class ArticleService {
     }
 
     public async getById(id: number): Promise<Article> {
-        if (isNaN(id) || id < 1 || id > await this.repository.count())
-            throw new Err("NotFound", "Article not found");
-        return await this.repository.findOne(id);
+        return await this.repository.findOneOrFail(id);
     }
 
     public async getCount(): Promise<number> {
