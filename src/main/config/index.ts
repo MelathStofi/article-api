@@ -27,14 +27,14 @@ export const getORMConfig = () => {
         reconnectTries: Number.MAX_VALUE,
         reconnectInterval: 2000,
         entities: [
-            `src/entity/**/*.${isCompiled ? "js" : "ts"}`
+            `src/main/entity/**/*.${isCompiled ? "js" : "ts"}`
         ],
         migrations: [
-            `src/migration/**/*.${isCompiled ? "js" : "ts"}`
+            `src/main/migration/**/*.${isCompiled ? "js" : "ts"}`
         ],
         cli: {
-            "entitiesDir": "src/entity",
-            "migrationsDir": "src/migration",
+            "entitiesDir": "src/main/entity",
+            "migrationsDir": "src/main/migration",
         }
     } as ConnectionOptions;
 }
