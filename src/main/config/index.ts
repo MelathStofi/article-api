@@ -14,29 +14,29 @@ export const getServerDetails = () => {
 
 export const getORMConfig = () => {
     const isCompiled = path.extname(__filename).includes('js');
-    return {
-        type: "mysql",
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
-        username: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        synchronize: !process.env.DB_NO_SYNC,
-        logging: !process.env.DB_NO_LOGS,
-        autoReconnect: true,
-        reconnectTries: Number.MAX_VALUE,
-        reconnectInterval: 2000,
-        entities: [
-            `src/main/entity/**/*.${isCompiled ? "js" : "ts"}`
-        ],
-        migrations: [
-            `src/main/migration/**/*.${isCompiled ? "js" : "ts"}`
-        ],
-        cli: {
-            "entitiesDir": "src/main/entity",
-            "migrationsDir": "src/main/migration",
-        }
-    } as ConnectionOptions;
+        return {
+            type: "mysql",
+            host: process.env.DB_HOST,
+            port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 3306,
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: "article_db",
+            synchronize: !process.env.DB_NO_SYNC,
+            logging: !process.env.DB_NO_LOGS,
+            autoReconnect: true,
+            reconnectTries: Number.MAX_VALUE,
+            reconnectInterval: 2000,
+            entities: [
+                `src/main/entity/**/*.${isCompiled ? "js" : "ts"}`
+            ],
+            migrations: [
+                `src/main/migration/**/*.${isCompiled ? "js" : "ts"}`
+            ],
+            cli: {
+                "entitiesDir": "src/main/entity",
+                "migrationsDir": "src/main/migration",
+            }
+        } as ConnectionOptions
 }
 
 export function getRequestCount() {
