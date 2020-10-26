@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import { Article } from "../entity/Article";
+import Page from "../model/Page";
 import ArticleService from "../service/ArticleService";
 
 export default class ArticleController {
@@ -10,7 +11,7 @@ export default class ArticleController {
         this.articleService = articleService;
     }
 
-    public async getPage(req: Request, res: Response, next: NextFunction) {
+    public async getPage(req: Request, res: Response, next: NextFunction): Promise<Page> {
         try {
             const pageSize = parseInt((req.query as any).pageSize);
             const page = parseInt((req.query as any).page);

@@ -3,9 +3,9 @@ import Err from "../error/Err";
 
 export default function validateRequest(req: Request, next: NextFunction, schema: any) {
     const options = {
-        abortEarly: false, // include all errors
-        allowUnknown: true, // ignore unknown props
-        stripUnknown: true // remove unknown props
+        abortEarly: false,
+        allowUnknown: true,
+        stripUnknown: true
     };
     const { error, value } = schema.validate(req.body, options);
     if (error) {
