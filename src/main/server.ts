@@ -12,7 +12,7 @@ createConnection(getORMConfig()).then(async connection => {
     app.use("/static", express.static(process.cwd() + "/static"));
     
     await connection.synchronize();
-    //initArticles();
+    initArticles();
     registerRoutes(app);
 
     const port = getServerDetails().PORT;
