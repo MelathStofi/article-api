@@ -22,7 +22,7 @@ const Routes = [
     },
     {
         method: "post",
-        route: "/articles",
+        route: "/articles/create",
         middleware: authenticateArticleSchema,
         controller: ArticleController,
         action: "create"
