@@ -17,13 +17,13 @@ export default class TokenController {
 
     async renewToken(req: Request, res: Response, next: NextFunction) {
         try {
-            let token = req.headers.authorization;
+            let token = req.headers.article_token;
             const tokenEntity = await this.repository.findOne(uuidAPIKey.toUUID(token, {"noDashes": true}));
             tokenEntity.remaining = getRequestCount();
             await this.repository.save(tokenEntity);
             return {remaining: tokenEntity.remaining};
         } catch (error) {
-            error.name = "ValidationError";
+            error.name = "UnauthorizedError";
             error.message = "Invalid token";
             next(error);
         }

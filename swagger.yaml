@@ -1,6 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Article API in Node.js + TypeORM
+  title: Article API
+  description: Node.js + Express + TypeScript + TypeORM
   version: 1.0.0
 
 servers:
@@ -8,35 +9,306 @@ servers:
     description: Local development server
 
 paths:
-  /:
+  /articles:
     get:
-      summary: Lists the links of articles
-      description: Restricted to admin users.
-      operationId: getAllArticleLinks
-      security:
-        - bearerAuth: []
+      summary: Page of articles
+      description: Lists the articles on a given page.
+      operationId: getPageOfArticles
+      parameters:
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            example: 2
+          required: true
+        - in: query
+          name: page
+          schema:
+            type: integer
+            example: 1
+          required: true
       responses:
         "200":
-          description: An array of all users
+          description: A page object
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      example: "5eb12e197e06a76ccdefc121"
-                    firstName:
-                      type: string
-                      example: "Jason"
-                    lastName:
-                      type: string
-                      example: "Watmore"
-                    username:
-                      type: string
-                      example: "jason"
-                    role:
-                      type: string
-                      example: "Admin"
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      pageSize:
+                        type: integer
+                        example: 1
+                      pageCount:
+                        type: integer
+                        example: 1
+                      page:
+                        type: integer
+                        example: 1
+                      count:
+                        type: integer
+                        example: 1
+                  articles:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: "1"
+                        title:
+                          type: string
+                          example: "This is the title"
+                        author:
+                          type: string
+                          example: "Meláth Stofi"
+                        imageUrl:
+                          type: string
+                          example: "http://localhost:8080/static\\uploads\\image-1603670887878.jpg"
+                        description:
+                          type: string
+                          example: "This is the content"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Query parameters must be positive natural numbers!"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "No such page"
+  /articles/create:
+    post:
+      summary: Create article
+      description: Creates an article from request object and returns it with an ID.
+      operationId: createArticle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "This is the title"
+                author:
+                  required: false
+                  type: string
+                  example: "Meláth Stofi"
+                imageUrl:
+                  required: false
+                  type: string
+                  example: "http://localhost:8080/static\\uploads\\image-1603670887878.jpg"
+                description:
+                  type: string
+                  example: "This is the content"
+      responses:
+        "200":
+          description: Article object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "1"
+                  title:
+                    type: string
+                    example: "This is the title"
+                  author:
+                    type: string
+                    example: "Meláth Stofi"
+                  imageUrl:
+                    type: string
+                    example: "http://localhost:8080/static\\uploads\\image-1603670887878.jpg"
+                  description:
+                    type: string
+                    example: "This is the content"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: '"title" is required'
+  /articles/{id}:
+    get:
+      summary: Detailed article
+      description: Returns the requested article if the token is present in the authorization header.
+      operationId: getArticleById
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            example: 1
+          required: true
+      responses:
+        "200":
+          description: Article object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: "1"
+                  title:
+                    type: string
+                    example: "This is the title"
+                  author:
+                    type: string
+                    example: "Meláth Stofi"
+                  imageUrl:
+                    type: string
+                    example: "http://localhost:8080/static\\uploads\\image-1603670887878.jpg"
+                  description:
+                    type: string
+                    example: "This is the content"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Article not found"
+  /auth/create-token:
+    post:
+      summary: Create token
+      description: Creates a token and returns it.
+      operationId: createToken
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                platform:
+                  type: string
+                  example: "IOS"
+      responses:
+        "200":
+          description: Token and the number of remaining requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "1E7Y1FC6NQMHNVJ72ZJBAH98H8YV"
+                  remaining:
+                    type: integer
+                    example: 5
+  /auth/renew-token:
+    put:
+      summary: Renew token
+      description: Renews the token that has been sent in the "article_token" header and returns it showing the number of remaining requests.
+      operationId: renewToken
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: Token and the number of remaining requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "1E7Y1FC6NQMHNVJ72ZJBAH98H8YV"
+                  remaining:
+                    type: integer
+                    example: 5
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+  /image:
+    post:
+      summary: Upload image
+      description: Static image upload. Image is sent in form data. Returns the URL pointing to the image file.
+      operationId: uploadImage
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: URL to image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  imageUrl:
+                    type: string
+                    example: "http://localhost:8080/static\\uploads\\image-1603670887878.jpg"
+        "400":
+          description: Bad Request - Not an image file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Please select an image to upload"
+        "400":
+          description: Bad Request - Multiple images or too large image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unexpected field"
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: article_token
+  responses:
+    UnauthorizedError:
+      description: The token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Invalid token"

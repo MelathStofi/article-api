@@ -24,8 +24,6 @@ New articles can be created and an image can be attached to it either by URL or 
      DB_NO_SYNC=false<br/>
      DB_NO_LOGS=true<br/>
 
-     REQUEST_COUNT=number<br/>
-
 3. Run 'yarn' command in the root directory of the project
 
 4. Run 'yarn start' command
